@@ -9,6 +9,10 @@ const app = express();
 
 app.use(express.json());
 
+
+// Use the genl_routes for the '/' path
+app.use('/', genl_routes);
+
 app.use("/customer",session({secret:"fingerprint_customer",resave: true, saveUninitialized: true}))
 
 app.use("/customer/auth/*", function auth(req,res,next){
@@ -37,5 +41,4 @@ app.use("/customer/auth/*", function auth(req,res,next){
 });
 
 const PORT = 5000;
-
-console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(PORT, () => console.log(`Server is running on http://localhost:${PORT}`));

@@ -25,7 +25,7 @@ public_users.post("/register", (req,res) => {
 });
 
 // Get the book list available in the shop
-public_users.get('/', async function (req, res) { // <-- Add the 'async' keyword here
+public_users.get('/', async function (req, res) { 
   //Write your code here
 /*
   const bookList = Object.keys(books).map(isbn => books[isbn]);
@@ -34,16 +34,17 @@ public_users.get('/', async function (req, res) { // <-- Add the 'async' keyword
   // task 1 vs task 10
 
   try {
-    const response = await axios.get(`http://localhost:${PORT}/books`); // Use the imported PORT variable with your actual API endpoint
-    return res.status(200).json({ books: response.data });
+    const bookList = Object.keys(books).map(isbn => books[isbn]);
+    return res.status(200).json({ books: bookList });
   } catch (error) {
+    console.error("Error fetching books:", error);
     return res.status(500).json({ message: "Error fetching books from the shop" });
   }
 
 });
 
 // Get book details based on ISBN
-public_users.get('/isbn/:isbn', async function (req, res) { // <-- Add the 'async' keyword here
+public_users.get('/isbn/:isbn', async function (req, res) { 
   //Write your code here
 /*
   const isbn = req.params.isbn;
@@ -51,65 +52,83 @@ public_users.get('/isbn/:isbn', async function (req, res) { // <-- Add the 'asyn
   if (bookDetails) {
     return res.status(200).json({ book: bookDetails });
   } else {
-    return res.status(404).json({ message: "Book not found" });
+    return res.status(404).json({ message: "Book not found." });
   }
 */
   // task 2 vs task 11
 
-  const isbn = req.params.isbn;
-  try {
-    const response = await axios.get(`http://localhost:${PORT}/books/${isbn}`); // Use the imported PORT variable with your actual API endpoint
-    return res.status(200).json({ book: response.data });
+    try {
+    const isbn = req.params.isbn;
+    const bookDetails = books[isbn];
+
+    if (bookDetails) {
+      return res.status(200).json({ book: bookDetails });
+    } else {
+      return res.status(404).json({ message: "Book not found." });
+    }
   } catch (error) {
-    return res.status(404).json({ message: "Book not found" });
+    console.error("Error fetching book details:", error);
+    return res.status(500).json({ message: "Error fetching book details" });
   }
 
  });
   
 // Get book details based on author
-public_users.get('/author/:author', async function (req, res) { // <-- Add the 'async' keyword here
+public_users.get('/author/:author', async function (req, res) { 
   //Write your code here
 /*
   const author = req.params.author;
   const matchingBooks = Object.values(books).filter(book => book.author === author);
   if (matchingBooks.length > 0) {
-    return res.status(200).json({ books: matchingBooks });
+    return res.status(200).json({ book: matchingBooks });
   } else {
-    return res.status(404).json({ message: "Books by the author not found" });
+    return res.status(404).json({ message: "Books by the author not found." });
   }
 */
   // task 3 vs task 12
 
-  const author = req.params.author;
   try {
-    const response = await axios.get(`http://localhost:${PORT}/books?author=${author}`); // Use the imported PORT variable with your actual API endpoint
-    return res.status(200).json({ books: response.data });
+    const author = req.params.author;
+    const matchingBooks = Object.values(books).filter(book => book.author === author);
+
+    if (matchingBooks.length > 0) {
+      return res.status(200).json({ books: matchingBooks });
+    } else {
+      return res.status(404).json({ message: "Books by the author not found." });
+    }
   } catch (error) {
-    return res.status(404).json({ message: "Books by the author not found" });
+    console.error("Error fetching books by author:", error);
+    return res.status(500).json({ message: "Error fetching books by author" });
   }
 
 });
 
 // Get all books based on title
-public_users.get('/title/:title', async function (req, res) { // <-- Add the 'async' keyword here
+public_users.get('/title/:title', async function (req, res) { 
   //Write your code here
 /*
   const title = req.params.title;
   const matchingBooks = Object.values(books).filter(book => book.title === title);
   if (matchingBooks.length > 0) {
-    return res.status(200).json({ books: matchingBooks });
+    return res.status(200).json({ book: matchingBooks });
   } else {
-    return res.status(404).json({ message: "Books with the title not found" });
+    return res.status(404).json({ message: "Books with the title not found." });
   }
 */
   // task 4 vs task 13
-  
-  const title = req.params.title;
+
   try {
-    const response = await axios.get(`http://localhost:${PORT}/books?title=${title}`); // Use the imported PORT variable with your actual API endpoint
-    return res.status(200).json({ books: response.data });
+    const title = req.params.title;
+    const matchingBooks = Object.values(books).filter(book => book.title === title);
+
+    if (matchingBooks.length > 0) {
+      return res.status(200).json({ books: matchingBooks });
+    } else {
+      return res.status(404).json({ message: "Books with the title not found." });
+    }
   } catch (error) {
-    return res.status(404).json({ message: "Books with the title not found" });
+    console.error("Error fetching books by title:", error);
+    return res.status(500).json({ message: "Error fetching books by title" });
   }
 
 });
@@ -129,8 +148,16 @@ public_users.get('/review/:isbn',function (req, res) {
   if (review) {
     return res.status(200).json({ review: review });
   } else {
-    return res.status(404).json({ message: "Review for the book not found" });
+    return res.status(404).json({ message: "Review for the book not found." });
   }
+
+});
+
+//  Home.
+public_users.get('/books/',function (req, res) {
+  //Write your code here
+
+  return res.status(404).json({ message: "Empty page." });
 
 });
 
