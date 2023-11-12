@@ -24,7 +24,7 @@ public_users.post("/register", (req,res) => {
   
 });
 
-// Get the book list available in the shop
+// Get the book list available in the shop.
 public_users.get('/', async function (req, res) { 
   //Write your code here
 /*
@@ -35,7 +35,7 @@ public_users.get('/', async function (req, res) {
 
   try {
     const bookList = Object.keys(books).map(isbn => books[isbn]);
-    return res.status(200).json({ books: bookList });
+    return res.status(200).json(bookList);
   } catch (error) {
     console.error("Error fetching books:", error);
     return res.status(500).json({ message: "Error fetching books from the shop" });
@@ -43,98 +43,79 @@ public_users.get('/', async function (req, res) {
 
 });
 
-// Get book details based on ISBN
-public_users.get('/isbn/:isbn', async function (req, res) { 
+// Get book details based on ISBN.
+public_users.get('/isbn/:isbn', async function (req, res) {
   //Write your code here
-/*
-  const isbn = req.params.isbn;
-  const bookDetails = books[isbn];
+
+  let updatedBooks = {};
+    Object.keys(books).forEach(key => {
+      updatedBooks[books[key].isbn] = books[key];
+  });
+
+  const isbnVal = req.params.isbn;
+  const bookDetails = updatedBooks[isbnVal];
   if (bookDetails) {
-    return res.status(200).json({ book: bookDetails });
+    return res.status(200).json(bookDetails);
   } else {
     return res.status(404).json({ message: "Book not found." });
   }
-*/
+
   // task 2 vs task 11
-
-    try {
-    const isbn = req.params.isbn;
-    const bookDetails = books[isbn];
-
-    if (bookDetails) {
-      return res.status(200).json({ book: bookDetails });
-    } else {
-      return res.status(404).json({ message: "Book not found." });
-    }
-  } catch (error) {
-    console.error("Error fetching book details:", error);
-    return res.status(500).json({ message: "Error fetching book details" });
-  }
 
  });
   
-// Get book details based on author
+// Get book details based on author.
 public_users.get('/author/:author', async function (req, res) { 
   //Write your code here
-/*
-  const author = req.params.author;
-  const matchingBooks = Object.values(books).filter(book => book.author === author);
+
+
+  let updatedBooks = {};
+    Object.keys(books).forEach(key => {
+      updatedBooks[books[key].author] = books[key];
+  });
+
+  const authorVal = req.params.author;
+  const matchingBooks = Object.values(updatedBooks).filter(book => book.author === authorVal);
+
   if (matchingBooks.length > 0) {
-    return res.status(200).json({ book: matchingBooks });
+    return res.status(200).json(matchingBooks);
   } else {
     return res.status(404).json({ message: "Books by the author not found." });
   }
-*/
+
   // task 3 vs task 12
+/*
 
-  try {
-    const author = req.params.author;
-    const matchingBooks = Object.values(books).filter(book => book.author === author);
-
-    if (matchingBooks.length > 0) {
-      return res.status(200).json({ books: matchingBooks });
-    } else {
-      return res.status(404).json({ message: "Books by the author not found." });
-    }
-  } catch (error) {
-    console.error("Error fetching books by author:", error);
-    return res.status(500).json({ message: "Error fetching books by author" });
-  }
-
+*/
 });
 
-// Get all books based on title
+// Get all books based on title.
 public_users.get('/title/:title', async function (req, res) { 
   //Write your code here
-/*
-  const title = req.params.title;
-  const matchingBooks = Object.values(books).filter(book => book.title === title);
+
+
+  let updatedBooks = {};
+    Object.keys(books).forEach(key => {
+      updatedBooks[books[key].title] = books[key];
+  });
+
+  const titleVal = req.params.title;
+  const matchingBooks = Object.values(updatedBooks).filter(book => book.title === updatedBooks);
+
   if (matchingBooks.length > 0) {
-    return res.status(200).json({ book: matchingBooks });
+    return res.status(200).json(matchingBooks);
   } else {
     return res.status(404).json({ message: "Books with the title not found." });
   }
-*/
+
   // task 4 vs task 13
+/*
 
-  try {
-    const title = req.params.title;
-    const matchingBooks = Object.values(books).filter(book => book.title === title);
-
-    if (matchingBooks.length > 0) {
-      return res.status(200).json({ books: matchingBooks });
-    } else {
-      return res.status(404).json({ message: "Books with the title not found." });
-    }
-  } catch (error) {
-    console.error("Error fetching books by title:", error);
-    return res.status(500).json({ message: "Error fetching books by title" });
-  }
-
+*/
 });
 
-//  Get book review
-public_users.get('/review/:isbn',function (req, res) {
+//  Get book reviews based on ISBN.
+public_users.get('/reviews/:isbn',function (req, res) {
   //Write your code here
 
   const isbn = req.params.isbn;
@@ -154,10 +135,21 @@ public_users.get('/review/:isbn',function (req, res) {
 });
 
 //  Home.
-public_users.get('/books/',function (req, res) {
+public_users.get('/books/', async function (req, res) { 
   //Write your code here
+/*
+  const bookList = Object.keys(books).map(isbn => books[isbn]);
+  return res.status(200).json({ books: bookList });
+*/
+  // task 1 vs task 10
 
-  return res.status(404).json({ message: "Empty page." });
+  try {
+    const bookList = Object.keys(books).map(isbn => books[isbn]);
+    return res.status(200).json(bookList);
+  } catch (error) {
+    console.error("Error fetching books:", error);
+    return res.status(500).json({ message: "Error fetching books from the shop" });
+  }
 
 });
 
