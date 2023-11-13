@@ -18,9 +18,11 @@ public_users.post("/register", (req,res) => {
     return res.status(409).json({ message: "Username already exists" });
   }
   // Assume you have a function to hash the password
-  const hashedPassword = hashPassword(password);
-  users[username] = { username, password: hashedPassword };
-  return res.status(201).json({ message: "User registered successfully" });
+  //const hashedPassword = require('crypto').createHash('sha256').update(password).digest('hex');
+  //const hashedPassword = hashPassword(password);
+  
+  users[username] = { username, password };
+  return res.status(201).json({ message: "User registered successfully", credentials: users[username] });
   
 });
 
@@ -100,7 +102,7 @@ public_users.get('/title/:title', async function (req, res) {
   });
 
   const titleVal = req.params.title;
-  const matchingBooks = Object.values(updatedBooks).filter(book => book.title === updatedBooks);
+  const matchingBooks = Object.values(updatedBooks).filter(book => book.title === titleVal);
 
   if (matchingBooks.length > 0) {
     return res.status(200).json(matchingBooks);
@@ -118,16 +120,17 @@ public_users.get('/title/:title', async function (req, res) {
 public_users.get('/reviews/:isbn',function (req, res) {
   //Write your code here
 
-  const isbn = req.params.isbn;
+  let updatedBooks = {};
+    Object.keys(books).forEach(key => {
+      updatedBooks[books[key].isbn] = books[key];
+  });
+
+  const isbnVal = req.params.isbn;
   // Assume you have a reviews object
-  const reviews = {
-    "1234567890": "Great book!",
-    "9876543210": "Not bad"
-    // Add more reviews as needed
-  };
-  const review = reviews[isbn];
-  if (review) {
-    return res.status(200).json({ review: review });
+
+  const matchingReviews = updatedBooks[isbnVal];
+  if (matchingReviews) {
+    return res.status(200).json(matchingReviews.reviews);
   } else {
     return res.status(404).json({ message: "Review for the book not found." });
   }

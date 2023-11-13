@@ -9,9 +9,11 @@ const app = express();
 
 app.use(express.json());
 
-
 // Use the genl_routes for the '/' path
 app.use('/', genl_routes);
+
+app.use('/', customer_routes);
+
 
 app.use("/customer",session({secret:"fingerprint_customer",resave: true, saveUninitialized: true}))
 
@@ -23,7 +25,7 @@ app.use("/customer/auth/*", function auth(req,res,next){
   }
 
   // If the session is valid, check the access token
-  const accessToken = req.session.user.accessToken;
+  const accessToken = req.session?.user?.accessToken;
 
   if (!accessToken) {
     return res.status(401).json({ message: "Access token not provided" });
