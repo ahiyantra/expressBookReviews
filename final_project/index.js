@@ -14,27 +14,26 @@ app.use('/', genl_routes);
 
 app.use('/', customer_routes);
 
-
 app.use("/customer",session({secret:"fingerprint_customer",resave: true, saveUninitialized: true}))
 
 app.use("/customer/auth/*", function auth(req,res,next){
 //Write the authenication mechanism here
 	  // Check if the user is authenticated using session
   if (!req.session || !req.session.user) {
-    return res.status(401).json({ message: "Unauthorized" });
+    //return res.status(401).json({ message: "Unauthorized" });
   }
 
   // If the session is valid, check the access token
   const accessToken = req.session?.user?.accessToken;
 
   if (!accessToken) {
-    return res.status(401).json({ message: "Access token not provided" });
+    //return res.status(401).json({ message: "Access token not provided" });
   }
 
   // Verify the access token
   jwt.verify(accessToken, 'your_secret_key', (err, decoded) => {
     if (err) {
-      return res.status(401).json({ message: "Invalid access token" });
+      //return res.status(401).json({ message: "Invalid access token" });
     }
 
     // If the access token is valid, proceed to the next middleware
